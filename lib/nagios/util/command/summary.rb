@@ -74,13 +74,13 @@ module Nagios::Util::Command
         ret = ret.select {|s|  not (@ignoredowntime && s.downtime)}
       end
       if @ignorehost
-        ret = ret.select {|s| @ignorehost.any? {|h| s.hostname =~ /#{h}/}}
+        ret = ret.select {|s| @ignorehost.all? {|h| s.host !~ /#{h}/}}
       end
       if @ignoreattempt
-        ret = ret.select {|s| @ignoreattempt.any? {|a| s.attempt == a}}
+        ret = ret.select {|s| @ignoreattempt.all? {|a| s.attempt != a}}
       end
       if @ignoreservice
-        ret = ret.select {|s| @ignoreservice.any? {|service| s.service == service}}
+        ret = ret.select {|s| @ignoreservice.all? {|service| s.service != service}}
       end
       ret
     end
