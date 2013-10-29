@@ -27,7 +27,7 @@ module Nagios
       method_option :format,  :type => :string, :enum => ['raw', 'simple', 'json', 'html'],
         :desc => 'Output format'
       method_option :file,  :type => :string, :banner => 'PATH', :aliases => ['-f'],
-        :desc => 'Spefiies a json file path which contains other parameters. This takes prior over ohter parameteres.'
+        :desc => 'Spefiies a json file path which contains other parameters. Other parameters take prior over a value specified by this file.'
       def summary
         Command::Summary.new(options).run
       end

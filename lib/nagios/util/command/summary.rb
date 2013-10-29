@@ -24,11 +24,16 @@ module Nagios::Util::Command
       config = if options[:file].nil?
                  options
                else
-                 JSON.parse(File.read(options[:file])).reduce({}) do |h,(k,v)|
+                 json = JSON.parse(File.read(options[:file])).reduce({}) do |h,(k,v)|
+                   h[k] = v
+                   h
+                 end
+                 json.merge(options).reduce({}) do |h,(k,v)|
                    h[k.to_sym] = v
                    h
                  end
                end
+
       @logger.debug "config: #{config.inspect}"
 
       @url             = (config[:url] || DEFAULT_URL)
