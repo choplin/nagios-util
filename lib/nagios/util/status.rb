@@ -205,24 +205,44 @@ module Nagios::Util
       end
 
       template = <<-TEMPLATE
-      <table>
-        <thead>
-          <tr>
-            <% for c in cols %>
-            <td><%= c %></td>
-            <% end %>
-          </tr>
-        <thead>
+      <html>
+        <head>
+          <style type="text/css">
+            table, td, th {
+                border: 2px #2b2b2b solid;
+                border-collapse: collapse;
+            }
+            td { padding: 2px 5px; }
+          </style>
+        </head>
+        <body>
+          <table>
+            <thead>
+              <tr>
+                <% for c in cols %>
+                <th><%= c %></th>
+                <% end %>
+              </tr>
+            <thead>
+            <tbody>
+              <% for row in rows %>
+              <tr>
+                <% for e in row %>
+                <td><%= e %></td>
+                <% end %>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </body>
+      </html>
         <tbody>
           <% for row in rows %>
           <tr>
-            <% for e in row %>
-            <td><%= e %></td>
-            <% end %>
-          </tr
+          </tr>
           <% end %>
         </tbody>
-      <table>
+      </table>
       TEMPLATE
 
       Erubis::Eruby.new(template).result(:cols => cols, :rows => rows)
