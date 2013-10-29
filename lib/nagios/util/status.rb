@@ -1,6 +1,7 @@
 require 'hpricot'
 require 'term/ansicolor'
 require 'terminal-table'
+require 'erubis'
 
 module Nagios::Util
   class Status
@@ -54,6 +55,16 @@ module Nagios::Util
         :downtime  =>  @downtime
       }
     end
+
+    def array_with_fields(fields)
+      fields.map do |f|
+        val = self.instance_eval("@#{f}")
+        if f == 'downtime'
+          val = val ? 'downtime' : ''
+        end
+        val.to_s
+      end
+    end
   end
 
   class StatusList
@@ -90,6 +101,8 @@ module Nagios::Util
         format_as_simple(colorize)
       when :json
         format_as_json
+      when :html
+        format_as_html
       end
     end
 
@@ -175,16 +188,49 @@ module Nagios::Util
       JSON.dump(@statuses.map(&:to_hash))
     end
 
+    def format_as_html
+      cols = %w(
+        host
+        service
+        status
+        last_check
+        duration
+        attempt
+        information
+        downtime
+      )
+
+      rows = @statuses.sort_by(&:host).map do |s|
+        row = s.array_with_fields(cols)
+      end
+
+      template = <<-TEMPLATE
+      <table>
+        <thead>
+          <tr>
+            <% for c in cols %>
+            <td><%= c %></td>
+            <% end %>
+          </tr>
+        <thead>
+        <tbody>
+          <% for row in rows %>
+          <tr>
+            <% for e in row %>
+            <td><%= e %></td>
+            <% end %>
+          </tr
+          <% end %>
+        </tbody>
+      <table>
+      TEMPLATE
+
+      Erubis::Eruby.new(template).result(:cols => cols, :rows => rows)
+    end
+
     def table_with_columns(statuses, cols, colorize)
       rows = statuses.sort_by(&:host).map do |s|
-        row = cols.map do |c|
-          val = s.instance_eval("s.#{c}")
-          if c == 'downtime'
-            val = val ? 'downtime' : ''
-          end
-          val.to_s
-        end
-
+        row = s.array_with_fields(cols)
         if colorize
           colorize_row(row, s.status)
         else

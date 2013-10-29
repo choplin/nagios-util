@@ -24,7 +24,7 @@ module Nagios
         :desc => 'List of attempts which you want to ignore'
       method_option :ignoreservice,  :type => :array, :banner => '"foo" "bar"',
         :desc => 'List of service names which you want to ignore'
-      method_option :format,  :type => :string, :enum => ['raw', 'simple', 'json']
+      method_option :format,  :type => :string, :enum => ['raw', 'simple', 'json', 'html'],
         :desc => 'Output format'
       method_option :file,  :type => :string, :banner => 'PATH', :aliases => ['-f'],
         :desc => 'Spefiies a json file path which contains other parameters. This takes prior over ohter parameteres.'
