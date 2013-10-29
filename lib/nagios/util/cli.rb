@@ -24,6 +24,8 @@ module Nagios
         :desc => 'List of attempts which you want to ignore'
       method_option :ignoreservice,  :type => :array, :banner => '"foo" "bar"',
         :desc => 'List of service names which you want to ignore'
+      method_option :ignorestatus,  :type => :array, :enum => ['critical', 'warning', 'ok', 'unknown'],
+        :desc => 'List of statuses which you want to ignore'
       method_option :format,  :type => :string, :enum => ['plain', 'simple', 'json', 'html'],
         :desc => 'Output format'
       method_option :file,  :type => :string, :banner => 'PATH', :aliases => ['-f'],

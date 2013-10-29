@@ -43,6 +43,7 @@ module Nagios::Util::Command
       @ignorehost      = config[:ignorehost]
       @ignoreattempt   = config[:ignoreattempt]
       @ignoreservice   = config[:ignoreservice]
+      @ignorestatus    = config[:ignorestatus] ? config[:ignorestatus].map(&:to_sym) : nil
       @format          = (config[:format] || DEFAULT_FORMAT).to_sym
     end
 
@@ -81,6 +82,9 @@ module Nagios::Util::Command
       end
       if @ignoreservice
         ret = ret.select {|s| @ignoreservice.all? {|service| s.service != service}}
+      end
+      if @ignorestatus
+        ret = ret.select {|s| @ignorestatus.all? {|st| s.status != st}}
       end
       ret
     end
