@@ -9,7 +9,7 @@ module Nagios
       class_option :help, :type => :boolean, :aliases => '-h', :desc => 'Help message.'
       class_option :'log-level', :type => :string, :desc => 'Set log level'
 
-      desc 'summary', 'Output summary status'
+      desc 'status', 'Output current status'
       method_option :'status-dat', :type => :string, :default => '/var/log/nagios/status.dat',
         :desc => 'Path to the Nagios\'s status.dat file'
       method_option :status,  :type => :array, :enum => ['critical', 'warning', 'ok', 'unknown'], :default => ['critical', 'warning', 'unknown'],
@@ -26,8 +26,8 @@ module Nagios
         :desc => 'Output format'
       method_option :file,  :type => :string, :banner => 'PATH', :aliases => ['-f'],
         :desc => 'Spefiies a json file path which contains other parameters. Other parameters take prior over a value specified by this file.'
-      def summary
-        Command::Summary.new(options).run
+      def status
+        Command::Status.new(options).run
       end
 
       desc 'downtime [COMMAND]', 'Set schedule downtime for specified host|service'

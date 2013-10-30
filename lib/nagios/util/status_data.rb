@@ -2,7 +2,7 @@ require 'nagios/util/log'
 require 'nagios/util/formatter'
 
 module Nagios::Util
-  class Status
+  class StatusData
     STATES = {
       0 => :ok,
       1 => :warning,
@@ -22,7 +22,7 @@ module Nagios::Util
       end.join("\n")
     end
 
-    def summary(format, filters, colorize)
+    def format(format, filters, colorize)
       service_statuses = filter_statues(@sections[:servicestatus], filters).map do |s|
         s.with_extra_attrs(:is_downtime => is_service_downtime?(s), :status => STATES[s.current_state.to_i])
       end

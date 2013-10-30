@@ -1,9 +1,9 @@
 require 'nagios/util/log'
-require 'nagios/util/status'
+require 'nagios/util/status_data'
 require 'json'
 
 module Nagios::Util::Command
-  class Summary
+  class Status
     STATUS_PATH = '/cgi-bin/status.cgi'
 
     DEFAULTS = {
@@ -45,8 +45,8 @@ module Nagios::Util::Command
     end
 
     def run
-      status = Nagios::Util::Status.parse_status_dat(@status_dat_path)
-      puts status.summary(@format, @filters , $stdout.tty?)
+      status = Nagios::Util::StatusData.parse_status_dat(@status_dat_path)
+      puts status.format(@format, @filters , $stdout.tty?)
     end
   end
 end

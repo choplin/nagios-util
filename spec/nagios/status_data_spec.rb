@@ -1,10 +1,10 @@
 require 'spec_helper'
-require 'nagios/util/status'
+require 'nagios/util/status_data'
 require 'fileutils'
 
-describe Nagios::Util::Status do
+describe Nagios::Util::StatusData do
   before :all do
-    @info = Nagios::Util::Status::Section.new(:info, {
+    @info = Nagios::Util::StatusData::Section.new(:info, {
       :created => '1383108828',
       :version => '3.2.3',
       :last_update_check => '1383076248',
@@ -13,7 +13,7 @@ describe Nagios::Util::Status do
       :new_version => '4.0.1'
     })
 
-    @program_status = Nagios::Util::Status::Section.new(:programstatus, {
+    @program_status = Nagios::Util::StatusData::Section.new(:programstatus, {
       :modified_host_attributes => '0',
       :modified_service_attributes => '0',
       :nagios_pid => '85031',
@@ -57,7 +57,7 @@ describe Nagios::Util::Status do
       :serial_host_check_stats => '0,0,0'
     })
 
-    @host_status = Nagios::Util::Status::Section.new(:hoststatus, {
+    @host_status = Nagios::Util::StatusData::Section.new(:hoststatus, {
       :host_name => 'test_server',
       :modified_attributes => '1',
       :check_command => '',
@@ -112,7 +112,7 @@ describe Nagios::Util::Status do
       :scheduled_downtime_depth => '0'
     })
 
-    @service_status = Nagios::Util::Status::Section.new(:servicestatus, {
+    @service_status = Nagios::Util::StatusData::Section.new(:servicestatus, {
       :host_name => 'test_server',
       :service_description => 'test_service',
       :modified_attributes => '0',
@@ -169,7 +169,7 @@ describe Nagios::Util::Status do
       :scheduled_downtime_depth => '0'
     })
 
-    @contact_status = Nagios::Util::Status::Section.new(:contactstatus, {
+    @contact_status = Nagios::Util::StatusData::Section.new(:contactstatus, {
       :contact_name => 'azuma',
       :modified_attributes => '0',
       :modified_host_attributes => '0',
@@ -182,7 +182,7 @@ describe Nagios::Util::Status do
       :service_notifications_enabled => '1'
     })
 
-    @service_comment = Nagios::Util::Status::Section.new(:servicecomment, {
+    @service_comment = Nagios::Util::StatusData::Section.new(:servicecomment, {
       :host_name => 'test_server',
       :service_description => 'test_service',
       :entry_type => '2',
@@ -196,7 +196,7 @@ describe Nagios::Util::Status do
       :comment_data => 'This service has been scheduled for fixed downtime from 09-11-2013 20:41:18 to 12-20-2013 20:41:18.  Notifications for the service will not be sent out during that time period.'
     })
 
-    @host_comment = Nagios::Util::Status::Section.new(:hostcomment, {
+    @host_comment = Nagios::Util::StatusData::Section.new(:hostcomment, {
       :host_name => 'test_server',
       :entry_type => '2',
       :comment_id => '70158',
@@ -209,7 +209,7 @@ describe Nagios::Util::Status do
       :comment_data => 'This host has been scheduled for fixed downtime from 10-23-2013 14:47:47 to 11-02-2013 14:47:47.  Notifications for the host will not be sent out during that time period.'
     })
 
-    @service_downtime = Nagios::Util::Status::Section.new(:servicedowntime, {
+    @service_downtime = Nagios::Util::StatusData::Section.new(:servicedowntime, {
       :host_name => 'test_server',
       :service_description => 'test_service',
       :downtime_id => '27679',
@@ -223,7 +223,7 @@ describe Nagios::Util::Status do
       :comment => 'maintenance'
     })
 
-    @host_downtime = Nagios::Util::Status::Section.new(:hostdowntime, {
+    @host_downtime = Nagios::Util::StatusData::Section.new(:hostdowntime, {
       :host_name => 'test_server',
       :downtime_id => '52730',
       :entry_time => '1382668269',
@@ -236,7 +236,7 @@ describe Nagios::Util::Status do
       :comment => 'maintenance'
     })
 
-    @status = Nagios::Util::Status.new({
+    @status = Nagios::Util::StatusData.new({
       :info => [@info],
       :programstatus => [@program_status],
       :hoststatus => [@host_status],
@@ -259,7 +259,7 @@ describe Nagios::Util::Status do
       file = 'test.dat'
       @path = File.join(here,file)
       open(@path, 'w'){|f| f.write(@status.dump)}
-      @parsed_status = Nagios::Util::Status.parse_status_dat(@path)
+      @parsed_status = Nagios::Util::StatusData.parse_status_dat(@path)
     end
 
     after :all do
@@ -314,9 +314,9 @@ describe Nagios::Util::Status do
     end
   end
 
-  describe Nagios::Util::Status::Section do
+  describe Nagios::Util::StatusData::Section do
     before :all do
-      @section = Nagios::Util::Status::Section.new(:test, {:foo => 'bar'})
+      @section = Nagios::Util::StatusData::Section.new(:test, {:foo => 'bar'})
     end
 
     it 'raise an exception for an attribute which does not exist' do
