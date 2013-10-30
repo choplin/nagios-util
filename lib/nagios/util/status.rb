@@ -44,7 +44,6 @@ module Nagios::Util
     end
 
     # TODO: skip sections using filters
-    # TODO: instanciate Section lazily
     def self.parse_status_dat(path)
       logger = Nagios::Util::Log.logger
       logger.debug "parse #{path} start"
@@ -53,23 +52,17 @@ module Nagios::Util
 
       open(path) do |f|
         type = nil
-        attrs = {}
+        attrs_str = []
         f.each_line do |line|
           line.chomp!
-
-          if line.start_with?('#')
-            next
-          elsif line.end_with?('{')
+          if line.end_with?("{")
             type = line.chomp('{').strip.to_sym
-          elsif line.end_with?('}')
-            s = Section.new(type, attrs)
+            attrs_str = []
+          elsif line.end_with?("}")
+            s = Section.new(type, attrs_str.join("\n"))
             sections[type].push(s)
-
-            type = nil
-            attrs = {}
-          elsif line =~ /[^=]+=/
-            k,v = line.strip.split('=',2)
-            attrs[k.to_sym] = v
+          else
+            attrs_str.push(line)
           end
         end
       end
@@ -130,40 +123,59 @@ module Nagios::Util
     class Section
       attr_reader :type, :attrs
 
-      def initialize(type, attrs)
+      def initialize(type, attrs_arg)
         @type = type
-        @attrs = attrs
+        if attrs_arg.class == Hash
+          @attrs = attrs_arg
+        elsif attrs_arg.class == String
+          @attrs_str = attrs_arg
+        end
       end
 
       def method_missing(name)
-        if @attrs.has_key?(name)
-          @attrs.fetch(name.to_sym)
+        if attrs.has_key?(name)
+          attrs.fetch(name.to_sym)
         else
           super
         end
       end
 
       def respond_to_missing?(symbol, include_private)
-        @attrs.has_key?(symbol)
+        attrs.has_key?(symbol)
       end
 
       def dump
         str = "#{@type} {\n"
-        str += @attrs.map{|k,v| "\t#{k}=#{v}"}.join("\n")
+        str += attrs.map{|k,v| "\t#{k}=#{v}"}.join("\n")
         str += "\n\t}\n"
         str
       end
 
       def ==(other)
-        @attrs == other.attrs
+        attrs == other.attrs
       end
 
       def to_hash
-        @attrs
+        attrs
       end
 
       def with_extra_attrs(extra)
-        self.class.new(@type, @attrs.merge(extra))
+        self.class.new(@type, attrs.merge(extra))
+      end
+
+      def attrs
+        @attrs || parse(@attrs_str)
+      end
+
+      private
+
+      def parse(str)
+        ret = {}
+        str.each_line do |line|
+          k,v = line.strip.split('=',2)
+          ret[k.to_sym] = v
+        end
+        ret
       end
     end
   end
