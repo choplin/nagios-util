@@ -47,7 +47,7 @@ module Nagios::Util
           duration_str(s.last_check.to_i - s.last_state_change.to_i),
           "#{s.max_attempts}/#{s.current_attempt}",
           s.plugin_output,
-          s.is_downtime ? 'yes' : ''
+          s.is_downtime ? 'yes' : 'no'
         ]
       end
 
@@ -96,7 +96,7 @@ module Nagios::Util
           duration_str(s.last_check.to_i - s.last_state_change.to_i),
           "#{s.max_attempts}/#{s.current_attempt}",
           s.plugin_output,
-          s.is_downtime ? 'yes' : ''
+          s.is_downtime ? 'yes' : 'no'
         ]
       end
 
