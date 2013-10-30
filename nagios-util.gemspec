@@ -19,8 +19,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "thor"
-  spec.add_runtime_dependency "hpricot"
-  spec.add_runtime_dependency "httpclient"
   spec.add_runtime_dependency "json"
   spec.add_runtime_dependency "term-ansicolor"
   spec.add_runtime_dependency "terminal-table"

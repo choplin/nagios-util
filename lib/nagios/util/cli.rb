@@ -10,23 +10,19 @@ module Nagios
       class_option :'log-level', :type => :string, :desc => 'Set log level'
 
       desc 'summary', 'Output summary status'
-      method_option :url,
-        :desc => 'Nagios url. This can include a schema(http|https), port(8080) and a path(/nagios).'
-      method_option :param,
-        :desc => 'Query parameter of status.cgi'
-      method_option :user, :banner => 'USER:PASSWORD', :aliases => ['-u'],
-        :desc => 'A credential for Web server authentication.'
-      method_option :ignoredowntime, :type => :boolean,
+      method_option :'status-dat', :type => :string, :default => '/var/log/nagios/status.dat',
+        :desc => 'Path to the Nagios\'s status.dat file'
+      method_option :status,  :type => :array, :enum => ['critical', 'warning', 'ok', 'unknown'], :default => ['critical', 'warning', 'unknown'],
+        :desc => 'List of statuses which you want to show'
+      method_option :'attempt',  :type => :numeric, :default => 3,
+        :desc => 'A threshold for a number of attempt. Only status with an attempt which is higher than or equals to the number specified by this parameter  will appear.'
+      method_option :ignoredowntime, :type => :boolean, :default => true,
         :desc => 'Specifies whether downtimed servcies/hosts are  ignored'
       method_option :ignorehost,     :type => :array, :banner => 'HOST1 HOST2',
         :desc => 'List of regular expressions for a hostname which you want to ignore'
-      method_option :ignoreattempt,  :type => :array, :banner => '1/3 2/3',
-        :desc => 'List of attempts which you want to ignore'
       method_option :ignoreservice,  :type => :array, :banner => '"foo" "bar"',
         :desc => 'List of service names which you want to ignore'
-      method_option :ignorestatus,  :type => :array, :enum => ['critical', 'warning', 'ok', 'unknown'],
-        :desc => 'List of statuses which you want to ignore'
-      method_option :format,  :type => :string, :enum => ['plain', 'simple', 'json', 'html'],
+      method_option :format,  :type => :string, :enum => ['plain', 'simple', 'json', 'html'], :default => 'plain',
         :desc => 'Output format'
       method_option :file,  :type => :string, :banner => 'PATH', :aliases => ['-f'],
         :desc => 'Spefiies a json file path which contains other parameters. Other parameters take prior over a value specified by this file.'
