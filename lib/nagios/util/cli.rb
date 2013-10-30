@@ -8,6 +8,7 @@ module Nagios
     class Cli < Thor
       class_option :help, :type => :boolean, :aliases => '-h', :desc => 'Help message.'
       class_option :'log-level', :type => :string, :desc => 'Set log level'
+      class_option :debug, :type => :string, :desc => 'Set log level to DEBUG'
 
       desc 'status', 'Output current status'
       method_option :'status-dat', :type => :string, :default => '/var/log/nagios/status.dat',
@@ -42,6 +43,7 @@ module Nagios
         def prepare(command)
           show_help(command) unless options[:help].nil?
           set_log_level unless options[:'log-level'].nil?
+          set_debug unless options[:debug].nil?
         end
 
         def show_help(command)
@@ -62,6 +64,10 @@ module Nagios
           when 'INFO' then
             Log.set_loglevel(Logger::INFO)
           end
+        end
+
+        def set_debug
+          Log.set_loglevel(Logger::DEBUG)
         end
       end
     end
