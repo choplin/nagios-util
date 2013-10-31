@@ -105,7 +105,7 @@ module Nagios::Util
         <head>
           <style type="text/css">
             table, td, th {
-                border: 2px #2b2b2b solid;
+                border: 1px #2b2b2b solid;
                 border-collapse: collapse;
             }
             td { padding: 2px 5px; }
