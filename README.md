@@ -44,6 +44,21 @@ Output current status.
 | --format | enum | Output format. available: 'plain' 'simple' 'json' 'html' | plain |
 | -f --file | string | Spefiies a json file path which contains other parameters. Other parameters take prior over a value specified by this file. ||
 
+#### JSON file example
+
+```
+{
+    "format" : "html",
+    "ignorehost" : [
+        "test\d+\.domain"
+    ],
+    "ignoreservice" : [
+        "Memory usage for apps."
+    ],
+    "status" : ["critical"]
+}
+```
+
 ### Downtime
 
 Set a scheduled dontime for a specified host or a service.
