@@ -46,7 +46,7 @@ module Nagios::Util::Command
 
     def run
       status = Nagios::Util::StatusData.parse_status_dat(@status_dat_path)
-      puts status.format(@format, @filters , $stdout.tty?)
+      $stdout.print status.format(@format, @filters , $stdout.tty?)
     end
   end
 end
