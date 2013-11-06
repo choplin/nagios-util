@@ -134,7 +134,7 @@ module Nagios::Util
       </html>
       TEMPLATE
 
-      Erubis::Eruby.new(template).result(:cols => cols, :rows => rows)
+      Erubis::Eruby.new(template).result(:cols => cols, :rows => rows) if rows.length > 0
     end
 
     def table(statuses, cols, row_proc)
