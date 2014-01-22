@@ -79,26 +79,27 @@ module Nagios::Util
       if filters[:status]
         ret = ret.select {|s| filters[:status].include?(STATES[s.current_state.to_i])}
       end
-      @logger.debug("a number of statuses filterd with status: #{ret.size}")
+      @logger.debug("a number of statuses after filterd with status: #{ret.size}")
 
       if filters[:attempt]
         ret = ret.select {|s| s.current_attempt.to_i >= filters[:attempt]}
       end
-      @logger.debug("a number of statuses filterd with attempt: #{ret.size}")
+      @logger.debug("a number of statuses after filterd with attempt: #{ret.size}")
 
       if filters[:ignoredowntime]
         ret = ret.select {|s| not is_service_downtime?(s)}
       end
-      @logger.debug("a number of statuses filterd with downtime: #{ret.size}")
+      @logger.debug("a number of statuses after filterd with downtime: #{ret.size}")
 
       if filters[:ignorehost]
         ret = ret.select {|s| filters[:ignorehost].all? {|h| s.host_name !~ /#{h}/}}
       end
-      @logger.debug("a number of statuses filterd with host: #{ret.size}")
+      @logger.debug("a number of statuses after filterd with host: #{ret.size}")
 
       if filters[:ignoreservice]
         ret = ret.select {|s| not filters[:ignoreservice].include?(s.service_description)}
       end
+      @logger.debug("a number of statuses after filterd with service: #{ret.size}")
 
       if filters[:ignoreduration]
         ret = ret.select do |s|
@@ -106,7 +107,7 @@ module Nagios::Util
           duration >= filters[:ignoreduration]
         end
       end
-      @logger.debug("a number of statuses filterd with service: #{ret.size}")
+      @logger.debug("a number of statuses after filterd with duration: #{ret.size}")
 
       ret
     end
