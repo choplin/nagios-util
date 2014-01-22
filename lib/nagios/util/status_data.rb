@@ -86,11 +86,6 @@ module Nagios::Util
       end
       @logger.debug("a number of statuses after filterd with attempt: #{ret.size}")
 
-      if filters[:ignoredowntime]
-        ret = ret.select {|s| not is_service_downtime?(s)}
-      end
-      @logger.debug("a number of statuses after filterd with downtime: #{ret.size}")
-
       if filters[:ignorehost]
         ret = ret.select {|s| filters[:ignorehost].all? {|h| s.host_name !~ /#{h}/}}
       end
@@ -108,6 +103,11 @@ module Nagios::Util
         end
       end
       @logger.debug("a number of statuses after filterd with duration: #{ret.size}")
+
+      if filters[:ignoredowntime]
+        ret = ret.select {|s| not is_service_downtime?(s)}
+      end
+      @logger.debug("a number of statuses after filterd with downtime: #{ret.size}")
 
       ret
     end
