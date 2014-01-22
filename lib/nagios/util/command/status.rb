@@ -38,7 +38,8 @@ module Nagios::Util::Command
         :attempt  => config[:attempt].to_i,
         :ignoredowntime => config[:ignoredowntime],
         :ignorehost     => config[:ignorehost],
-        :ignoreservice  => config[:ignoreservice]
+        :ignoreservice  => config[:ignoreservice],
+        :ignoreduration  => config[:ignoreduration],
       }
 
       @format = config[:format].to_sym

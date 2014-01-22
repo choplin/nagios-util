@@ -23,6 +23,8 @@ module Nagios
         :desc => 'List of regular expressions for a hostname which you want to ignore'
       method_option :ignoreservice,  :type => :array, :banner => '"foo" "bar"',
         :desc => 'List of service names which you want to ignore'
+      method_option :ignoreduration,  :type => :numeric, :banner => 'SECONDS',
+        :desc => 'A threshold for a duration of a failed status. All failed statuses whose duration is under the specified time with this option will be ignored'
       method_option :format,  :type => :string, :enum => ['plain', 'simple', 'json', 'html'], :default => 'plain',
         :desc => 'Output format'
       method_option :file,  :type => :string, :banner => 'PATH', :aliases => ['-f'],

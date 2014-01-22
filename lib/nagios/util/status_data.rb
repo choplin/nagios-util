@@ -99,6 +99,13 @@ module Nagios::Util
       if filters[:ignoreservice]
         ret = ret.select {|s| not filters[:ignoreservice].include?(s.service_description)}
       end
+
+      if filters[:ignoreduration]
+        ret = ret.select do |s|
+          duration = s.last_check.to_i - s.last_state_change.to_i
+          duration >= filters[:ignoreduration]
+        end
+      end
       @logger.debug("a number of statuses filterd with service: #{ret.size}")
 
       ret
